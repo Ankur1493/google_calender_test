@@ -22,7 +22,12 @@ app.get("/google", (req, res) => {
   res.redirect(url);
 })
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const { code } = req.query;
+  const { tokens } = await oauth2Client.getToken(code)
+  oauth2Client.setCredentials(tokens);
+  console.log(code);
+
   res.send("user authenticated, it's working")
 })
 
