@@ -67,14 +67,19 @@ app.get("/", async (req, res) => {
 
 app.get("/schedule_event", async (req, res) => {
 
-  console.log(oauth2Client.credentials.access_token)
-
   await calendar.events.insert({
     calendarId: "primary",
     auth: oauth2Client,
     requestBody: event,
     sendUpdates: "all",
     conferenceDataVersion: 1,
+  }, (err, event) => {
+    if (err) {
+      console.log('There was an error contacting the Calendar service: ' + err);
+      return;
+    }
+    const meetLink = event.data.conferenceData.entryPoints.find(entry => entry.entryPointType === 'video').uri;
+    console.log('Google Meet link:', meetLink);
   });
 
   res.send("Completed");
