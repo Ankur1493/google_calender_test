@@ -1,7 +1,7 @@
 import express from "express";
 import { google } from "googleapis"
 import dotenv from "dotenv";
-import { info } from "console";
+import { v4 as uuid } from "uuid"
 dotenv.config()
 const app = express();
 
@@ -20,16 +20,21 @@ const event = {
   'location': 'A93 st6 east Azad Nagar',
   'description': 'This is the most important test',
   'start': {
-    'dateTime': '2024-03-29T15:00:00+05:30',
+    'dateTime': '2024-03-29T17:00:00+05:30',
     'timeZone': 'Asia/Kolkata',
   },
   'end': {
-    'dateTime': '2024-03-29T17:00:00+05:30',
+    'dateTime': '2024-03-29T19:00:00+05:30',
     'timeZone': 'Asia/Kolkata',
   },
   'attendees': [
     { 'email': 'uditkapoor060@gmail.com' },
   ],
+  'conferenceData': {
+    'createRequest': {
+      'requestId': uuid()
+    }
+  },
   'reminders': {
     'useDefault': false,
     'overrides': [
@@ -68,7 +73,8 @@ app.get("/schedule_event", async (req, res) => {
     calendarId: "primary",
     auth: oauth2Client,
     requestBody: event,
-    sendUpdates: "all"
+    sendUpdates: "all",
+    conferenceDataVersion: 1,
   });
 
   res.send("Completed");
